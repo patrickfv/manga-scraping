@@ -22,3 +22,6 @@ class Manga:
             self.pages.append(pages)
         if isinstance(pages, list):
             self.pages.extend(pages)
+
+    def __str__(self):
+        return '%s: %s' % (self.name, self.path)
