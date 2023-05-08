@@ -12,8 +12,9 @@ class RequestPage:
         'Connection': 'keep-alive'
     }
 
-    def get_doc_html(self):
-        req = urllib.request.Request(url=self.url, headers=self.header)
+    def get_doc_html(self, route):
+        url = '%s%s' % (self.url, route)
+        req = urllib.request.Request(url=url, headers=self.header)
         doc_html = urllib.request.urlopen(req).read()
         return doc_html
 
