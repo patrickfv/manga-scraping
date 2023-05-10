@@ -16,8 +16,13 @@ class MangaHostRepository(LoadMangaRepository, RequestPage):
         for tag_result in tag_tr_list:
             find = tag_result.find('a', class_='pull-left')
             tag_a = find
-            # describe = tag_tr_list[0].find('div', class_='entry-content').text
-            manga = LoadMangaResult(tag_a['title'], tag_a['href'])
+            desc = tag_result.find('div', class_='entry-content').text
+            # sub = tag_result.find('span', class_='muted').text
+            title = tag_a['title']
+            path = tag_a['href']
+
+            manga = LoadMangaResult(title, path)
+            manga.description = desc
             manga.picture = tag_a.picture.source['srcset']
             manga_list.append(manga)
         return manga_list
