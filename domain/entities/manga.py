@@ -27,7 +27,7 @@ class Manga:
     description: str = ''
     categories: list = []
     picture = None
-    status: bool
+    status: bool = False
 
     def __init__(self, name: str, path: str):
         self.name = name
