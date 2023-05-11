@@ -1,6 +1,6 @@
 from data.contracts.search_manga_repository import SearchMangaRepository
 from data.contracts.load_manga_repository import LoadMangaRepository
-from data.models.manga import LoadMangaResult
+from data.models.manga import LoadMangaResult, ChapterParams
 from bs4 import BeautifulSoup
 from data.contracts.scraping import RequestPage
 
@@ -29,5 +29,20 @@ class MangaHostRepository(SearchMangaRepository, LoadMangaRepository, RequestPag
         return manga_list
 
     def load_manga(self, identifier: str) -> LoadMangaResult:
-        route = '%s/manga/%s' % (self.url, name)
-        return super().load_manga(name)
+        doc_html = self.get_doc_html(identifier)
+        soup = BeautifulSoup(doc_html, 'html.parser')
+        base_tag = soup.find('article', class_='ejeCg')
+        name = base_tag.find('h1', class_='title').text
+        chapters_tag_div = base_tag.find('div', class_='chapters').find_all('div', class_='cap')
+        
+        load_manga_result = LoadMangaResult(name=name, path=identifier)
+        load_manga_result.set_chapter([ChapterParams(
+            manga=load_manga_result,
+            title=chapter_tag.find('a', class_='btn-caps w-button').text,
+            number=float(chapter_tag.find('a', class_='btn-caps w-button').text),
+            path=chapter_tag.find('a', class_='btn-green w-button pull-left')['href']
+            ) for chapter_tag in chapters_tag_div])
+        load_manga_result.description = base_tag.find('div', class_='paragraph').find('p').text
+        load_manga_result.author = base_tag.find('ul', class_='w-list-unstyled').find_all('div')[2].contents[1]
+        load_manga_result.status = base_tag.find('ul', class_='w-list-unstyled').find_all('div')[1].contents[1]
+        return load_manga_result
