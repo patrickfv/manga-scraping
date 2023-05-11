@@ -11,6 +11,6 @@ class ChapterParams(Chapter):
 
 
 class LoadMangaResult(Manga):
-    def set_pages(self, chapter: ChapterParams | list[ChapterParams]):
+    def set_chapter(self, chapter: ChapterParams | list[ChapterParams]):
         super().set_chapters(chapter)
 
