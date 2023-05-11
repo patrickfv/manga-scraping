@@ -1,13 +1,14 @@
+from data.contracts.search_manga_repository import SearchMangaRepository
 from data.contracts.load_manga_repository import LoadMangaRepository
 from data.models.manga import LoadMangaResult
 from bs4 import BeautifulSoup
 from data.contracts.scraping import RequestPage
 
 
-class MangaHostRepository(LoadMangaRepository, RequestPage):
+class MangaHostRepository(SearchMangaRepository, LoadMangaRepository, RequestPage):
     url = 'https://mangahosted.com/'
 
-    def load_manga(self, name: str, **kwargs) -> list[LoadMangaResult]:
+    def search_manga(self, name: str) -> list[LoadMangaResult]:
         route = 'find/%s' % (name.replace(' ', '+'))
         doc_html = self.get_doc_html(route)
         soup = BeautifulSoup(doc_html, 'html.parser')
@@ -27,3 +28,6 @@ class MangaHostRepository(LoadMangaRepository, RequestPage):
             manga_list.append(manga)
         return manga_list
 
+    def load_manga(self, identifier: str) -> LoadMangaResult:
+        route = '%s/manga/%s' % (self.url, name)
+        return super().load_manga(name)
