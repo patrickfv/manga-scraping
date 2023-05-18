@@ -10,4 +10,4 @@ class SearchMangaService(SearchManga):
 
     def load(self, name) -> list[Manga]:
         # middleman - code smell
-        return self.repo.load_manga(name)
+        return self.repo.search_manga(name) # type: ignore

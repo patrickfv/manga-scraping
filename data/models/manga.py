@@ -1,16 +1,15 @@
 from domain.entities.manga import Manga, Page, Chapter
 
 
-class PageParams(Page):
+class PageModel(Page):
     pass
 
 
-class ChapterParams(Chapter):
-    def set_pages(self, page: PageParams | list[PageParams]):
-        super().set_pages(page)
+class ChapterModel(Chapter):
+    def set_pages(self, page: PageModel | list[PageModel]):
+        pass
 
 
-class LoadMangaResult(Manga):
-    def set_chapter(self, chapter: ChapterParams | list[ChapterParams]):
-        super().set_chapters(chapter)
-
+class MangaModel(Manga):
+    def set_chapter(self, chapter: ChapterModel | list[ChapterModel]):
+        pass
