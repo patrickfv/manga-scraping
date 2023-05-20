@@ -7,9 +7,9 @@ class PageModel(Page):
 
 class ChapterModel(Chapter):
     def set_pages(self, page: PageModel | list[PageModel]):
-        pass
+        super().set_pages(page) # type: ignore
 
 
 class MangaModel(Manga):
     def set_chapter(self, chapter: ChapterModel | list[ChapterModel]):
-        pass
+        super().set_chapters(chapter) # type: ignore
