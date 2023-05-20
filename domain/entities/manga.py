@@ -8,7 +8,7 @@ class Page:
 class Chapter:
     pages: list[Page]
 
-    def __init__(self, manga, number: int, title: str, path: str):
+    def __init__(self, manga, number: float, title: str, path: str):
         self.manga = manga
         self.number = number
         self.title = title

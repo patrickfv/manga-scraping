@@ -1,18 +1,19 @@
 from data.contracts.search_manga_repository import SearchMangaRepository
 from data.contracts.load_manga_repository import LoadMangaRepository
+from data.contracts.load_chapter_repository import LoadChapterRepository
 from data.models.manga import MangaModel, ChapterModel
 from bs4 import BeautifulSoup
 from data.contracts.scraping import RequestPage
 
 
-class MangaHostRepository(SearchMangaRepository, LoadMangaRepository, RequestPage):
+class MangaHostRepository(SearchMangaRepository, LoadMangaRepository, LoadChapterRepository, RequestPage):
     url = 'https://mangahosted.com/'
 
     def search_manga(self, name: str) -> list[MangaModel]:
         route = 'find/%s' % (name.replace(' ', '+'))
         doc_html = self.get_doc_html(route)
         soup = BeautifulSoup(doc_html, 'html.parser')
-        tag_tr_list = soup.find('table', class_='table table-search table-hover').tbody.find_all('tr') # type: ignore
+        tag_tr_list = soup.find('table', class_ ='table table-search table-hover').tbody.find_all('tr') # type: ignore
         manga_list = []
         for tag_result in tag_tr_list:
             find = tag_result.find('a', class_='pull-left')
@@ -46,3 +47,6 @@ class MangaHostRepository(SearchMangaRepository, LoadMangaRepository, RequestPag
         load_manga_result.author = base_tag.find('ul', class_='w-list-unstyled').find_all('div')[2].contents[1] # type: ignore
         load_manga_result.status = base_tag.find('ul', class_='w-list-unstyled').find_all('div')[1].contents[1] # type: ignore
         return load_manga_result
+    
+    def load_chapter(self, identifier) -> ChapterModel:
+        return super().load_chapter(identifier)
