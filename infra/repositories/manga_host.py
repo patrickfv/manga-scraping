@@ -1,7 +1,7 @@
 from data.contracts.search_manga_repository import SearchMangaRepository
 from data.contracts.load_manga_repository import LoadMangaRepository
 from data.contracts.load_chapter_repository import LoadChapterRepository
-from data.models.manga import MangaModel, ChapterModel
+from data.models.manga import MangaModel, ChapterModel, PageModel
 from bs4 import BeautifulSoup
 from data.contracts.scraping import RequestPage
 
@@ -49,4 +49,13 @@ class MangaHostRepository(SearchMangaRepository, LoadMangaRepository, LoadChapte
         return load_manga_result
     
     def load_chapter(self, identifier) -> ChapterModel:
-        return super().load_chapter(identifier)
+        doc_html = self.get_doc_html(identifier)
+        soup = BeautifulSoup(doc_html, 'html.parser')
+        base_tag = soup.find(id='slider')
+        page_list = [PageModel(
+            chapter=None, 
+            index=int(a_tag['data-read-hash']),
+            path=a_tag.find('img')['src']) for a_tag in base_tag.find_all('a')]
+        chapter = ChapterModel(manga=None, number=1, title='', path='')
+        chapter.set_pages(page=page_list)
+        return chapter

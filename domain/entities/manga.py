@@ -6,7 +6,7 @@ class Page:
 
 
 class Chapter:
-    pages: list[Page]
+    pages: list[Page] = []
 
     def __init__(self, manga, number: float, title: str, path: str):
         self.manga = manga
